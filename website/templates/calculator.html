@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Investment Calculator</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <style>
+        #add_investor {
+            float: right;
+        }
+
+        .investor-breakdown-input {
+            width: 33%;
+        }
+    </style>
+</head>
+<body>
+<div class="p-4 d-inline-block">
+
+    <div id="inputs">
+        <form method="post">
+            <h2>Inputs</h2>
+            <div class="border border-secondary p-3 bg-light d-inline-block">
+                <div id="allocations">
+                    <p class="my-1">Total Available Allocation</p>
+                    <input type="text" name="allocation_amount" placeholder="Allocation" class="form-control">
+                </div>
+
+                <div id="breakdown" class="my-3">
+                    <p class="my-1">Investor Breakdown</p>
+                    <div id="investor_breakdowns" class="form-group px-3">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Prorate</button>
+                <button id="add_investor" type="button" class="btn btn-primary mr-2">Add Investor</button>
+            </div>
+        </form>
+    </div>
+
+
+    {% if calculated_allocations %}
+    <div id="results" class="mt-4">
+        <h2>Results</h2>
+        <div class="border border-secondary p-3 bg-light text-center">
+            {% for name, amount in calculated_allocations.items() %}
+                {{name}} - ${{amount|round(2, 'floor')}} <br/>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+
+</div>
+</body>
+</html>
+
+<script>
+    let investor_breakdowns = 0;
+
+    function insert_investor_breakdown() {
+        if (investor_breakdowns >= 10) {
+            alert("Maximum 10 investors allowed!");
+            return
+        }
+        const investor_breakdown_id = "breakdown_" + investor_breakdowns
+        const div_id = investor_breakdown_id + "_container"
+
+        // insert div
+        $('#investor_breakdowns').append(
+            $('<div/>')
+                .attr("id", div_id)
+                .attr("class", "form-group row")
+        );
+        const investor_breakdown_container = $('#' + div_id)
+
+        // name input
+        const investor_name_input = $("<input>", {
+            name: "investor_name_" + investor_breakdowns,
+            "placeholder": "Investor Name",
+            "class": "form-control investor-breakdown-input",
+        });
+        investor_breakdown_container.append(investor_name_input);
+
+        // requested amount input
+        const requested_amount_input = $("<input>", {
+            name: "requested_amount_" + investor_breakdowns,
+            "placeholder": "Requested Amount",
+            "class": "form-control investor-breakdown-input",
+        });
+        investor_breakdown_container.append(requested_amount_input);
+
+        // requested amount input
+        const average_amount_input = $("<input>", {
+            name: "average_amount_" + investor_breakdowns,
+            "placeholder": "Average Amount",
+            "class": "form-control investor-breakdown-input",
+        });
+        investor_breakdown_container.append(average_amount_input);
+
+        investor_breakdowns++;
+    }
+
+    insert_investor_breakdown()
+    insert_investor_breakdown()
+    insert_investor_breakdown();
+
+    document.getElementById("add_investor").onclick = function () {
+        insert_investor_breakdown();
+    }
+</script>
