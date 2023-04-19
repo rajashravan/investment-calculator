@@ -9,3 +9,34 @@ issue and how would you communicate this to the affected customers.
 
 Response
 ~~~~~~~~
+
+Firstly, I would take the bug offline by:
+    * Locating where the bug exists
+    * Taking the service where the bug is located offline so more customers are not affected
+
+Second, I would gather as much information as possible related to the issue, as that would affect how we
+would go about resolving it. The information I would be looking for would be:
+* How our customers were negatively impacted (ex. financial or legal ramifications)
+* How our business was negatively impacted (ex. financial or legal ramifications)
+* Any info on the bug itself
+
+In order to gather the information, I would contact:
+* The customer success team, as they would know how the customers were affected, or they could ask customers directly
+* Other engineers, particularly the engineer(s) responsible for introducing the bug
+* The operations/legal/financial teams, as they would know how the business was affected
+
+Assuming there is no more relevant information to be gathered, here is what I would do next:
+I would resolve the bug by:
+    * Working with other engineers to fix the bug
+    * Add more tests. Specifically, I would add tests that mimic the deals that triggered the bug
+    * Push the bug fix to production and take the service back online
+
+Then, I would work with customer success to contact the affected customers and let them know about the issue
+    * Customer Success will understand the customers better than I would, and can communicate with them in a way
+    that would be less likely to affect the business's public image.
+    * After understanding how the customers were affected financially (ex. a customer lost $X dollars due to the bug),
+    I would work with the legal/operations/finance teams to compensate the customer as best we can, given the law.
+
+Finally, I would communicate this issue with all relevant stakehodlers by:
+    * Creating a post-mortem that outlines what went wrong, why it happened, and how we can avoid a similar issue
+    in the future
