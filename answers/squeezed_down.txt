@@ -12,3 +12,53 @@ this could potentially happen less often?
 
 Response
 ~~~~~~~~
+I would work with the Account Manager responsible for that unhappy investor and try to understand them better.
+Sometimes people are upset for something completely different than what they say they are upset about.
+For example, perhaps this investor has had a history of not understanding the product and how to use it, or they are
+a legacy customer that has not been informed about new features. Or maybe this investor is only looking at certain deals,
+in which case we could inform them of other deals that they were not aware of.
+
+Next, I would work with the Account Manager to inform them about how the system works, and that they can't reach
+their requested amount simply because of supply and demand. Obviously, they may still be upset. To remedy this,
+I would see if there is anything else we could offer them to make them less upset. Ex. upgrading their memebership to a
+higher tier for free, giving them early access to exclusive deals in the future (if this is legally possible), etc.
+
+Currently, the proration logic only considers that they investor has historically invested, but does NOT include what
+they have ATTEMPTED to invest in the past. Our proation logic currently uses average historical investments as a way to
+assign priority. Instead, we could also add historical REQUESTED investment size to the proration calculation.
+This way, we could give additional priority to investors who have attempted to invest large sums.
+
+This might look like:
+allocation_factor_denominator = sum of average allocation across all investors + 0.5 * (sum of average attempted allocation across all investors)
+allocation_factor_numerator = average_allocation + 0.5 * average_requested_allocation
+allocation_factor = allocation_factor_numerator / allocation_factor_denominator
+Investor allocation = available_allocation * allocation_factor
+
+Available allocation: $100
+Investor A requested to invest $150
+Investor B requested to invest $50
+
+Investor A has a historical average investment size of $100, but has attempted to invest $500 in the past on average
+Investor B has a historical average investment size of $25, but has attempted to invest $500 in the past on average
+
+After proration:
+allocation_factor_denominator = (100 + 25) + 0.5 * (500+500) = 625
+
+investor_a_allocation_factor_numerator = 100 + 0.5 * 500 = 350
+investor_a_allocation_factor = 350 / 625 = 0.56
+investor_a_allocation = 100 * 0.56 = $56
+
+investor_b_allocation_factor_numerator = 25 + 0.5 * 500 = 275
+investor_b_allocation_factor = 275 / 625 = 0.44
+investor_b_allocation = 100 * 0.44 = $44
+
+With our current algorithm,
+Investor A would invest $80
+Investror B would invest $20
+
+With the new algorithm,
+Investor A would invest $56
+Investor B would invest $44
+
+This allows Investor B to invest more than they would have been able to otherwise, since we are rewarding them
+for their historically high attempted investments.
